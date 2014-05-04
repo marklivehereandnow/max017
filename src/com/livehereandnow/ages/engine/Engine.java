@@ -24,6 +24,96 @@ public class Engine {
 
     }
 
+    String returnStr = " return str...";
+
+    public String getFeedback() {
+//        return core.getCardRowInfo();
+        return core.getFeedback();
+//        return returnStr;
+    }
+
+    public void setFeedback(String str) {
+        returnStr = str;
+    }
+
+    public boolean parser(String cmd) throws IOException, AgesException {
+        //
+        // 1. init
+        //
+        int tokenCnt = 0;//命令行裡共有幾個字，給予初值為0
+        String keyword = "";//指令是什麼，給予初值空字符串
+        int p1 = -1;//指令的參數是什麼，給予初值為-1，-1通常是指不能用的值
+        int p2 = -1;
+        int p3 = -1;
+
+        //
+        // 2. parser to words 
+        //
+        //將命令行的句子拆解為字，以空格格開為依據，空格都不記
+        String[] strTokens = cmd.split(" ");
+        List<String> tokens = new ArrayList<>();
+        for (String item : strTokens) {
+            if (item.length() > 0) {
+                tokens.add(item);
+            }
+        }
+        tokenCnt = tokens.size();//賦予變量tokenCnt真正的值，真正的值是指到底打個幾個字
+
+        //
+        // 3. to execute command based on size
+        //
+        if (tokenCnt == 0) {//when simple enter
+            return true; // silently ignore it
+        }
+        // 
+        keyword = tokens.get(0);//指令的關鍵字是第0個字，例如take 3的take
+
+        if (tokenCnt == 1) {//如果輸入的是一個字的話
+            return doCmd(keyword);
+        }
+        if (tokenCnt == 2) {//如果輸入的是2個字的話
+            try {
+                p1 = Integer.parseInt(tokens.get(1));
+            } catch (Exception ex) {
+                System.out.println("Parameter must be integer!");
+                return false;
+            }
+            return doCmd(keyword, p1);
+        }
+
+        if (tokenCnt == 3) {//如果輸入的是2個字的話
+            try {
+                p1 = Integer.parseInt(tokens.get(1));
+                p2 = Integer.parseInt(tokens.get(2));
+            } catch (Exception ex) {
+                System.out.println("Parameter must be integer!");
+                return false;
+            }
+            return doCmd(keyword, p1, p2);
+        }
+
+        // ver 0.62 for upgrad 3 0 1, Upgrad Farm from Age A to Age I
+        if (tokenCnt == 4) {//如果輸入的是3個字的話
+            try {
+                p1 = Integer.parseInt(tokens.get(1));
+                p2 = Integer.parseInt(tokens.get(2));
+                p3 = Integer.parseInt(tokens.get(3));
+            } catch (Exception ex) {
+                System.out.println("Parameter must be integer!");
+                return false;
+            }
+            return doCmd(keyword, p1, p2, p3);
+        }
+
+        //
+//        System.out.println("Cureently command must be one or two words only!");
+        setFeedback("   unknown command," + cmd + ", just ignore it!");
+//        setFeedback();
+
+        return false;
+
+    }
+
 //    public EngineCore getCore() {
 //        return core;
 //    }
@@ -33,20 +123,31 @@ public class Engine {
 
     public String doProtocol(String cmd) throws IOException, AgesException {
 //        core.getRoundNum();
-        switch(cmd){
+        switch (cmd) {
             case "history":
                 return core.getHistory();
             default:
-                  return core.getCardRowInfo();
+                return core.getCardRowInfo();
         }
-        
-        
-      
+
 //        return core.NOCARD.toString();
-        
     }
-    
-    
+
+    public String doUserCmd(String user, String cmd) throws IOException, AgesException {
+        if (core.get當前玩家().getName().equalsIgnoreCase(user)) {
+            if (parser(cmd)) {
+                return core.getFeedback();
+
+            } else {
+                return "unknown command, " + cmd;
+            }
+            
+
+        } else {
+            return "   " + user + ", not your turn!";
+        }
+    }
+
     public boolean doCmd(String keyword) throws IOException, AgesException {
         switch (keyword) {
             case "d"://v0.59
@@ -103,7 +204,7 @@ public class Engine {
             case "play-card":
             case "out-card":
                 return core.doPlayCardWithRoundNumber(parameter);
-                   case "oo":
+            case "oo":
                 return core.doPlayCard革命(parameter);
             case "拿"://在我的環境NetBeans無法執行，但是在DOS可以
             case "拿牌":
@@ -158,15 +259,19 @@ public class Engine {
     public boolean doVersion() {
         System.out.println(" TODO   [A內政-亞歷山大圖書館 科技生產+1，文化生產+1，內政手牌上限+1，軍事手牌上限+1]  ");
         //getBuildingLimit()
+
+        System.out.println("  === ver 0.72 ===  2014-5-4, 21:35, by Mark, in Kunshan　");
+        System.out.println("    1. AgesServer project --- take-card is working  ");
+        System.out.println("    2. simple enter get CardRow info ");
         
         System.out.println("  === ver 0.71 ===  2014-5-4, 13:07, by Mark, in Kunshan　");
         System.out.println("    1. working with AgesServer project ");
         System.out.println("    2. basic 'history' or just show CardRow ");
-    
+
         System.out.println("  === ver 0.70 ===  2014-5-1, 10:46, by Max　");
         System.out.println("    1. 新增簡易指令 oo x 預計要做成革命指令 ");
         System.out.println("    2. note指令第一層在Engine第二層在EngineCore第三層在Player ");
-        
+
         System.out.println("  === ver 0.69 ===  2014-5-1, 10:00, by Max　");
         System.out.println("    1. 新增簡易指令 ");
         System.out.println("    2.使用d 檢視玩牌的歷史紀錄，目前只記錄有效的指令");

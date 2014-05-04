@@ -88,16 +88,28 @@ public class EngineCore {
         return roundNum;
     }
 
+    String feedback = null;
+
+    public String getFeedback() {
+        if (feedback == null) {
+            return getCardRowInfo();
+        }
+        return feedback;
+    }
+
+    public void setFeedback(String str) {
+        feedback = str;
+    }
+
     public String getHistory() {
         return history.toString();
     }
 
-    public String getCardRowInfo(){
-        
-        return "Round#"+ roundNum+"\n"+cardRow.toString();
+    public String getCardRowInfo() {
+
+        return cardRow.toString();
     }
-    
-    
+
     public boolean doStatus() throws AgesException {
 
         cardRow.show(11);//[A-亞歷山大大帝-領袖]
@@ -138,11 +150,10 @@ public class EngineCore {
     }
 
     public boolean doChangeTurn() throws AgesException {
-
         //  System.out.println("運行doChangeTurn");
         get當前玩家().執行生產();
-         history.addRecord(roundNum, get當前玩家().getName(), "change-turn " , " --- ");
-   
+        history.addRecord(roundNum, get當前玩家().getName(), "change-turn ", " --- ");
+
         if ((1 + 當前玩家ID) == 玩家人數) {
             當前玩家ID = 0;
             roundNum++;
@@ -162,7 +173,8 @@ public class EngineCore {
             cardRow.setRound(roundNum);
             cardRow.addCards();
         }
-   
+        setFeedback(null);
+
         return true;
     }
 
@@ -275,8 +287,6 @@ public class EngineCore {
         return false;
     }
 
-    
-    
     public boolean doPlayCard(int k, int k2) throws AgesException {
         get當前玩家().doPlayCard(k, k2);
 
@@ -320,11 +330,13 @@ public class EngineCore {
         if (cardNum > 12 || cardNum < 0) { // card number must be 0 to 12 only 
 //                        System.out.println("card number must be 0 to 12 only *** Nothing happened ***");
             System.out.println("拿的牌號必須要在0~12之內 *** 什麼事情都沒發生 ***");
+            setFeedback("拿的牌號必須要在0~12之內 *** 什麼事情都沒發生 ***");
             return true;
         }
         if (cardRow.getCards().get(cardNum).get編號() == 999) {
 //                        System.out.println("不讓玩家拿空牌 *** Nothing happened ***");
             System.out.println("不讓玩家拿空牌 *** 什麼事情都沒發生 ***");
+            setFeedback("不讓玩家拿空牌 *** 什麼事情都沒發生 ***");
 
             return true;
         }
@@ -346,18 +358,21 @@ public class EngineCore {
 //            old___cardRow.add(p1, NOCARD);//並在卡牌列同一個位置增加空牌
             cardRow.getCards().remove(p1);//從卡牌列上移除該牌
             cardRow.getCards().add(p1, NOCARD);//並在卡牌列同一個位置增加空牌
+            setFeedback(getCardRowInfo());
 
             history.addRecord(roundNum, get當前玩家().getName(), "take-card " + p1, card.toString(1));
         } else {
 //            System.out.println("拿牌沒有成功" + card.get卡名());
             System.out.println("   拿牌沒有成功的原因:" + get當前玩家().get失敗原因());
+            setFeedback("   拿牌沒有成功的原因:" + get當前玩家().get失敗原因());
 
         }
 
         //    do拿牌扣點(cardPoint);
         return true;
     }
-   public boolean doHelpShort() {
+
+    public boolean doHelpShort() {
         System.out.println("   help         this command");
         System.out.println("\n=== basic commands === (start)");
 
@@ -368,10 +383,10 @@ public class EngineCore {
         System.out.println("d 3 1 摧毀 農業 1");
         System.out.println("d DEBUG，目前含檢視歷史紀錄");
         System.out.println("b 3 1 建造 農業 1");
-        System.out.println("o 0 打出 第0張牌/p 1 打出 第1張牌")
-                ;
+        System.out.println("o 0 打出 第0張牌/p 1 打出 第1張牌");
         return true;
     }
+
     public boolean doHelp() {
         System.out.println("   help         this command");
         System.out.println("\n=== basic commands === (start)");

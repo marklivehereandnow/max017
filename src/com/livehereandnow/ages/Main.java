@@ -27,7 +27,7 @@ public class Main {
         BufferedReader in = new BufferedReader(cin);
         while (true) {
             System.out.print("" + engine.getCurrentPlayer().getName() + " >> ");
-            doCmd(in.readLine());
+            parser(in.readLine());
         }
     }
 
@@ -39,7 +39,7 @@ public class Main {
      * @return
      * @throws IOException
      */
-    public boolean doCmd(String cmd) throws IOException, AgesException {
+    public boolean parser(String cmd) throws IOException, AgesException {
         //
         // 1. init
         //

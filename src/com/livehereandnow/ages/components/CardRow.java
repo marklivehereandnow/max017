@@ -143,8 +143,8 @@ public class CardRow {
         StringBuilder sb=new StringBuilder();
         int k=0;
         for (Card c:cardRow){
-            sb.append((k++));
-            sb.append(c.toString(1));
+//            sb.append((k++));
+            sb.append(c.toString(0));
         }
         return sb.toString();
     }

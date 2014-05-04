@@ -324,6 +324,15 @@ public class Card implements CardType {
      */
     public String toString(int k) {
         switch (k) {
+            case 0://
+                //  Value 1: 0[時代A內政-荷馬-領袖] 1[] 2[時代A內政-凱薩-領袖] 3[時代A內政-空中花園-奇蹟] 4[時代A內政-農業-科技] 
+                if (卡名.equalsIgnoreCase("")) {
+
+                    return "[] ";
+                }
+                return "["  + get卡名() +"]";
+         
+    
             case 1://
                 //  Value 1: 0[時代A內政-荷馬-領袖] 1[] 2[時代A內政-凱薩-領袖] 3[時代A內政-空中花園-奇蹟] 4[時代A內政-農業-科技] 
                 if (卡名.equalsIgnoreCase("")) {
