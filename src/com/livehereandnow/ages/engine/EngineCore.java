@@ -230,6 +230,14 @@ public class EngineCore {
         return true;
     }
 
+    public boolean doBrief() throws AgesException {
+    
+        String feedback= getCardRowInfo();
+        
+        setFeedback(feedback);
+        return true;
+    }
+    
     public boolean doDebug() throws AgesException {
         System.out.println("手牌上限值的定義，為當前板塊上的內政點數和，由Cards列出所有相關的牌");
 //          cards.show和手牌數相關的牌();

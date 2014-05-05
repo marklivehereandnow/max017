@@ -134,6 +134,12 @@ public class Engine {
     }
 
     public String doUserCmd(String user, String cmd) throws IOException, AgesException {
+
+        if (user.equalsIgnoreCase("admin")) {
+            parser(cmd);
+            return core.getFeedback();
+        }
+
         if (core.get當前玩家().getName().equalsIgnoreCase(user)) {
             if (parser(cmd)) {
                 return core.getFeedback();
@@ -141,7 +147,6 @@ public class Engine {
             } else {
                 return "unknown command, " + cmd;
             }
-            
 
         } else {
             return "   " + user + ", not your turn!";
@@ -150,6 +155,9 @@ public class Engine {
 
     public boolean doCmd(String keyword) throws IOException, AgesException {
         switch (keyword) {
+            case "brief":
+                return core.doBrief();
+
             case "d"://v0.59
             case "debug"://v0.59
                 return core.doDebug();
@@ -260,10 +268,14 @@ public class Engine {
         System.out.println(" TODO   [A內政-亞歷山大圖書館 科技生產+1，文化生產+1，內政手牌上限+1，軍事手牌上限+1]  ");
         //getBuildingLimit()
 
-        System.out.println("  === ver 0.72 ===  2014-5-4, 21:35, by Mark, in Kunshan　");
+        System.out.println("  === ver 0.73 ===  2014-5-5, 13:05, by Mark, in Kunshan　");
+        System.out.println("    1. AgesServer project --- admin can auto (every 3 sec) see CardRow info ");
+        System.out.println();
+        
+ System.out.println("  === ver 0.72 ===  2014-5-4, 21:35, by Mark, in Kunshan　");
         System.out.println("    1. AgesServer project --- take-card is working  ");
         System.out.println("    2. simple enter get CardRow info ");
-        
+
         System.out.println("  === ver 0.71 ===  2014-5-4, 13:07, by Mark, in Kunshan　");
         System.out.println("    1. working with AgesServer project ");
         System.out.println("    2. basic 'history' or just show CardRow ");
